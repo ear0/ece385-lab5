@@ -52,10 +52,11 @@ module ISDU (   input logic         Clk,
 				  
 				output logic        Mem_OE,
 									Mem_WE
+				//,output logic [4:0] curr, next	//debug				
 				);
 //    @36:35 L10 extend state 33 to 3 states to account for 2 clock cycles
 //    needed to get ADDRA data and 1 extra clock for MDR to commit
-//    alsp PC = PC + 1 happens in state 18
+//    also PC = PC + 1 happens in state 18
 	enum logic [4:0] {  Halted, 
 						PauseIR1, 
 						PauseIR2, 
@@ -79,7 +80,8 @@ module ISDU (   input logic         Clk,
 	begin 
 		// Default next state is staying at current state
 		Next_state = State;
-		
+		//curr = State; //debug
+        //next = Next_state; //debug
 		// Default controls signal values
 		LD_MAR = 1'b0;
 		LD_MDR = 1'b0;
@@ -150,8 +152,8 @@ module ISDU (   input logic         Clk,
 			// You need to finish the rest of states.....
 			//S_05 //AND
 			//S_09 //NOT
-			default : Next_state = S_18; //maybe change to HALT state
-
+			default : ; //maybe change to HALT state
+            //default Next_state = S_18
 		endcase
 		
 		// Assign control signals based on current state
@@ -169,13 +171,13 @@ module ISDU (   input logic         Clk,
 			S_33_1 : //You may have to think about this as well to adapt to RAM with wait-states
 				begin
 					Mem_OE = 1'b1;
-					LD_MDR = 1'b1;
+					//LD_MDR = 1'b1;
 				end
 				
 		    S_33_2:
 		        begin
 		            Mem_OE = 1'b1; //assert these signals throughout the wait states, why not
-		            LD_MDR = 1'b1;
+		            //LD_MDR = 1'b1;
 		        end
 		    S_33_3:
 		        begin
@@ -205,6 +207,7 @@ module ISDU (   input logic         Clk,
 
 			default : ;
 		endcase
+		
 	end 
 
 	

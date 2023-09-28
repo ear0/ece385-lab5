@@ -9,6 +9,7 @@ module slc3_testtop(
 	output logic [3:0] hex_grid,
 	output logic [7:0] hex_segB,
 	output logic [3:0] hex_gridB
+	//,output logic [4:0] currstate, nextstate //debug
 );
 
 // Input button synchronizer to cross clock domain
@@ -25,8 +26,16 @@ logic Reset_ah, Continue_ah, Run_ah;
 assign Reset_ah = Reset;
 assign Run_ah = RUN_S;
 assign Continue_ah = CONTINUE_S;
+//debug
 
-slc3 slc(.Reset(Reset_ah), .Continue(Continue_ah), .Run(Run_ah), .*);
+slc3 slc(.Reset(Reset_ah), 
+        .Continue(Continue_ah), 
+        .Run(Run_ah), 
+        //.state_c(currstate), //debug
+        //.state_n(nextstate), //debug
+        .*);
+
+//slc3 slc(.Reset(Reset_ah), .Continue(Continue_ah), .Run(Run_ah), .*);
 test_memory mem(.Reset(Reset_ah), .Clk(Clk), .data(Data_to_SRAM), .address(ADDR[9:0]), .ena(OE), .wren(WE), .readout(Data_from_SRAM) );
 
 endmodule

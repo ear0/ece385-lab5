@@ -17,8 +17,6 @@
 //    Xilinx vivado
 //    Revised 07-25-2023 
 //------------------------------------------------------------------------------
-
-
 module slc3(
 	input logic [15:0] SW,
 	input logic	Clk, Reset, Run, Continue,
@@ -31,6 +29,7 @@ module slc3(
 	output logic [3:0] hex_gridB,
 	output logic [15:0] ADDR,
 	output logic [15:0] Data_to_SRAM
+	//,output logic [4:0] state_c, state_n //debug
 );
 
 // Internal connections
@@ -46,6 +45,7 @@ logic [3:0] hex_4[3:0];
 //I added this
 logic [15:0] PC_val, Bus;
 logic [15:0] MDR_temp;
+//logic [4:0] cstate, nstate; //debug
 //temp ALU value of 0
 logic alu_temp = 1'b0;
 
@@ -59,10 +59,7 @@ HexDriver HexA (
 
 // You may use the second (right) HEX driver to display additional debug information
 // For example, Prof. Cheng's solution code has PC being displayed on the right HEX
-
-
 HexDriver HexB (
-
     .clk(Clk),
     .reset(Reset),
     .in({IR[15:12], IR[11:8], IR[7:4], IR[3:0]}),
@@ -78,24 +75,31 @@ assign MIO_EN = OE;
 
 // Instantiate the rest of your modules here according to the block diagram of the SLC-3
 // including your register file, ALU, etc..
-/*
-GateMARMUX, GatePC, GateMDR, GateALU, FromALU, FromMDR, FromMARMUX, FromPC, BusContent       
-[15:0] FromALU, FromMDR, FromMARMUX, FromPC, 
- [15:0] BusContent                         
-*/
-Reg_16 MAR_REG(.Clk(Clk), .Load(LD_MAR), .Reset(Reset), .D(Bus), .Data_Out(ADDR));
-//needs to be muxed either internally or externally.
-Reg_16 MDR_REG(.Clk(Clk), .Load(LD_MDR), .Reset(Reset), .D(MDR_temp), .Data_Out(MDR)); 
-Reg_16 IR_REG(.Clk(Clk), .Load(LD_IR), .Reset(Reset), .D(Bus), .Data_Out(IR));
-/*
-input logic [15:0] d0, d1,  
-input logic select,         
-output logic [15:0] mux_data
-*/
-//mdr_temp is value between mux and mdr register 
-Mux2to1Block mux_mdr(.d0(Bus), .d1(MDR_In), .select(LD_MDR), .mux_data(MDR_temp));
 
-BusDriver BusControl(.GateMARMUX(GateMARMUX), 
+Reg_16 MAR_REG(.Clk(Clk), 
+                .Load(LD_MAR), 
+                .Reset(Reset), 
+                .D(Bus), 
+                .Data_Out(MAR));
+//needs to be muxed either internally or externally.
+Reg_16 MDR_REG(.Clk(Clk), 
+                .Load(LD_MDR), 
+                .Reset(Reset), 
+                .D(MDR_temp),
+                .Data_Out(MDR)); 
+Reg_16 IR_REG(.Clk(Clk), 
+                .Load(LD_IR), 
+                .Reset(Reset), 
+                .D(Bus), 
+                .Data_Out(IR));
+
+//mdr_temp is value between mux and mdr register 
+Mux2to1Block mux_mdr(.d0(Bus),         //MIO_EN =0, load from bus
+                    .d1(MDR_In),       //MIO_EN=1, load from data_to_cpu
+                    .select(MIO_EN),  ///MIO_EN
+                    .mux_data(MDR_temp));
+
+BusDriver BusControl(.GateMARMUX(GateMARMUX),  //if statement up in here but we might want to change it
                      .GatePC(GatePC), 
                      .GateMDR(GateMDR), 
                      .GateALU(GateALU), 
@@ -106,6 +110,7 @@ BusDriver BusControl(.GateMARMUX(GateMARMUX),
                      .BusContent(Bus));
                     
 //note: .FromPC(PC_val) comes from ProgramCounter, Bus is common
+//PCMUX [1:0] is select vector? 
 PCBlock ProgramCounter(.Clk(Clk), 
                         .Load(LD_PC), 
                         .Reset(Reset), 
@@ -128,6 +133,7 @@ ISDU state_controller(
 	.*, .Reset(Reset), .Run(Run), .Continue(Continue),
 	.Opcode(IR[15:12]), .IR_5(IR[5]), .IR_11(IR[11]),
    .Mem_OE(OE), .Mem_WE(WE)
+   //,.curr(state_c), .next(state_n) //debug
 );
 	
 endmodule
