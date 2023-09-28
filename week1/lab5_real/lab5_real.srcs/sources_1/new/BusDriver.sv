@@ -20,3 +20,18 @@ module BusDriver(input logic GateMARMUX, GatePC, GateMDR, GateALU,
     end
   
 endmodule
+
+//gonna put the 16-bit mux here
+module Mux2to1Block(input logic [15:0] d0, d1,
+                    input logic select,
+                    output logic [15:0] mux_data);
+                    
+    always_comb
+    begin
+        unique case(select)
+            1'b0: mux_data =  d0;
+            1'b1: mux_data = d1;
+        endcase
+    end
+
+endmodule

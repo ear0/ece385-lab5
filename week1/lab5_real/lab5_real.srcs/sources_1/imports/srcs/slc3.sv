@@ -45,6 +45,7 @@ logic [3:0] hex_4[3:0];
 
 //I added this
 logic [15:0] PC_val, Bus;
+logic [15:0] MDR_temp;
 //temp ALU value of 0
 logic alu_temp = 1'b0;
 
@@ -82,12 +83,28 @@ GateMARMUX, GatePC, GateMDR, GateALU, FromALU, FromMDR, FromMARMUX, FromPC, BusC
 [15:0] FromALU, FromMDR, FromMARMUX, FromPC, 
  [15:0] BusContent                         
 */
-BusDriver BusControl(.*, 
-                    .FromALU(alu_temp), 
-                    .FromMDR(MDR), 
-                    .FromMARMUX(MAR), 
-                    .FromPC(PC_val), 
-                    .BusContent(Bus));
+Reg_16 MAR_REG(.Clk(Clk), .Load(LD_MAR), .Reset(Reset), .D(Bus), .Data_Out(ADDR));
+//needs to be muxed either internally or externally.
+Reg_16 MDR_REG(.Clk(Clk), .Load(LD_MDR), .Reset(Reset), .D(MDR_temp), .Data_Out(MDR)); 
+Reg_16 IR_REG(.Clk(Clk), .Load(LD_IR), .Reset(Reset), .D(Bus), .Data_Out(IR));
+/*
+input logic [15:0] d0, d1,  
+input logic select,         
+output logic [15:0] mux_data
+*/
+//mdr_temp is value between mux and mdr register 
+Mux2to1Block mux_mdr(.d0(Bus), .d1(MDR_In), .select(LD_MDR), .mux_data(MDR_temp));
+
+BusDriver BusControl(.GateMARMUX(GateMARMUX), 
+                     .GatePC(GatePC), 
+                     .GateMDR(GateMDR), 
+                     .GateALU(GateALU), 
+                     .FromALU(alu_temp), 
+                     .FromMDR(MDR), 
+                     .FromMARMUX(MAR), 
+                     .FromPC(PC_val), 
+                     .BusContent(Bus));
+                    
 //note: .FromPC(PC_val) comes from ProgramCounter, Bus is common
 PCBlock ProgramCounter(.Clk(Clk), 
                         .Load(LD_PC), 
@@ -96,6 +113,7 @@ PCBlock ProgramCounter(.Clk(Clk),
                         .PCMUX_bus(Bus), 
                         .PCMUX_adder(0), 
                         .PC(PC_val)); //tied the adder input to 0 for demo 1
+                        
 //9/26 add IR/MDR/MAR registers and a mux to load MDR                         
 // Our I/O controller (note, this plugs into MDR/MAR)
 Mem2IO memory_subsystem(
