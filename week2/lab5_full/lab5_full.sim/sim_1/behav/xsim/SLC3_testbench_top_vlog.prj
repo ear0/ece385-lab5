@@ -1,0 +1,21 @@
+# compile verilog/system verilog design source files
+sv xil_defaultlib  \
+"../../../../lab5_real.srcs/sources_1/new/BusDriver.sv" \
+"../../../../lab5_real.srcs/sources_1/imports/srcs/ISDU.sv" \
+"../../../../lab5_real.srcs/sources_1/imports/srcs/Instantiateram.sv" \
+"../../../../lab5_real.srcs/sources_1/imports/srcs/Mem2IO.sv" \
+"../../../../lab5_real.srcs/sources_1/new/PCBlock.sv" \
+"../../../../lab5_real.srcs/sources_1/new/Reg_16.sv" \
+"../../../../lab5_real.srcs/sources_1/imports/design_source/hex.sv" \
+"../../../../lab5_real.srcs/sources_1/imports/srcs/memory_contents.sv" \
+"../../../../lab5_real.srcs/sources_1/imports/srcs/slc3.sv" \
+"../../../../lab5_real.srcs/sources_1/imports/srcs/slc3_testtop.sv" \
+"../../../../lab5_real.srcs/sources_1/imports/srcs/synchronizers.sv" \
+"../../../../lab5_real.srcs/sources_1/imports/srcs/test_memory.sv" \
+"../../../../lab5_real.srcs/sim_1/new/SLC3_testbench_top.sv" \
+
+# compile glbl module
+verilog xil_defaultlib "glbl.v"
+
+# Do not sort compile order
+nosort

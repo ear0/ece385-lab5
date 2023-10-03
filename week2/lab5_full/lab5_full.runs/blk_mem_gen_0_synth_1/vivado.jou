@@ -1,0 +1,13 @@
+#-----------------------------------------------------------
+# Vivado v2022.2 (64-bit)
+# SW Build 3671981 on Fri Oct 14 05:00:03 MDT 2022
+# IP Build 3669848 on Fri Oct 14 08:30:02 MDT 2022
+# Start of session at: Mon Sep 25 22:22:08 2023
+# Process ID: 27752
+# Current directory: C:/Users/Elliot Rubin/Desktop/School/ECE385/Lab5/ece385-lab5/lab5_real/lab5_real.runs/blk_mem_gen_0_synth_1
+# Command line: vivado.exe -log blk_mem_gen_0.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source blk_mem_gen_0.tcl
+# Log file: C:/Users/Elliot Rubin/Desktop/School/ECE385/Lab5/ece385-lab5/lab5_real/lab5_real.runs/blk_mem_gen_0_synth_1/blk_mem_gen_0.vds
+# Journal file: C:/Users/Elliot Rubin/Desktop/School/ECE385/Lab5/ece385-lab5/lab5_real/lab5_real.runs/blk_mem_gen_0_synth_1\vivado.jou
+# Running On: LAPTOP-EQQM1SUU, OS: Windows, CPU Frequency: 2592 MHz, CPU Physical cores: 6, Host memory: 34115 MB
+#-----------------------------------------------------------
+source blk_mem_gen_0.tcl -notrace

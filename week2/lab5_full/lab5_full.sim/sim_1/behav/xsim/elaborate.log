@@ -1,0 +1,33 @@
+Vivado Simulator v2022.2
+Copyright 1986-1999, 2001-2022 Xilinx, Inc. All Rights Reserved.
+Running: C:/Xilinx/Vivado/2022.2/bin/unwrapped/win64.o/xelab.exe --incr --debug typical --relax --mt 2 -L xil_defaultlib -L uvm -L unisims_ver -L unimacro_ver -L secureip -L xpm --snapshot SLC3_testbench_top_behav xil_defaultlib.SLC3_testbench_top xil_defaultlib.glbl -log elaborate.log 
+Using 2 slave threads.
+Starting static elaboration
+Pass Through NonSizing Optimizer
+WARNING: [VRFC 10-3091] actual bit length 1 differs from formal bit length 16 for port 'FromALU' [C:/Users/Elliot Rubin/Desktop/School/ECE385/Lab5/ece385-lab5/week1/lab5_real/lab5_real.srcs/sources_1/imports/srcs/slc3.sv:106]
+WARNING: [VRFC 10-3091] actual bit length 32 differs from formal bit length 16 for port 'PCMUX_adder' [C:/Users/Elliot Rubin/Desktop/School/ECE385/Lab5/ece385-lab5/week1/lab5_real/lab5_real.srcs/sources_1/imports/srcs/slc3.sv:119]
+Completed static elaboration
+Starting simulation data flow analysis
+WARNING: [XSIM 43-4100] "C:/Users/Elliot Rubin/Desktop/School/ECE385/Lab5/ece385-lab5/week1/lab5_real/lab5_real.srcs/sim_1/new/SLC3_testbench_top.sv" Line 1. Module SLC3_testbench_top has a timescale but at least one module in design doesn't have timescale.
+WARNING: [XSIM 43-4100] "C:/Users/Elliot Rubin/Desktop/School/ECE385/Lab5/ece385-lab5/week1/lab5_real/lab5_real.srcs/sim_1/new/SLC3_testbench_top.sv" Line 1. Module SLC3_testbench_top has a timescale but at least one module in design doesn't have timescale.
+WARNING: [XSIM 43-4100] "C:/Users/Elliot Rubin/Desktop/School/ECE385/Lab5/ece385-lab5/week1/lab5_real/lab5_real.sim/sim_1/behav/xsim/glbl.v" Line 6. Module glbl has a timescale but at least one module in design doesn't have timescale.
+WARNING: [XSIM 43-4100] "C:/Users/Elliot Rubin/Desktop/School/ECE385/Lab5/ece385-lab5/week1/lab5_real/lab5_real.sim/sim_1/behav/xsim/glbl.v" Line 6. Module glbl has a timescale but at least one module in design doesn't have timescale.
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling package xil_defaultlib.SLC3_2
+Compiling module xil_defaultlib.sync
+Compiling module xil_defaultlib.nibble_to_hex
+Compiling module xil_defaultlib.HexDriver_default
+Compiling module xil_defaultlib.Reg_16
+Compiling module xil_defaultlib.Mux2to1Block
+Compiling module xil_defaultlib.BusDriver
+Compiling module xil_defaultlib.PCBlock
+Compiling module xil_defaultlib.Mem2IO
+Compiling module xil_defaultlib.ISDU
+Compiling module xil_defaultlib.slc3
+Compiling module xil_defaultlib.memory_parser
+Compiling module xil_defaultlib.test_memory
+Compiling module xil_defaultlib.slc3_testtop_default
+Compiling module xil_defaultlib.SLC3_testbench_top
+Compiling module xil_defaultlib.glbl
+Built simulation snapshot SLC3_testbench_top_behav
