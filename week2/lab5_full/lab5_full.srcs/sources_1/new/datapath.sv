@@ -1,13 +1,15 @@
 module datapath(input logic Clk, Reset,
                 input logic LD_MAR, LD_MDR, LD_IR, LD_PC, LD_LED, LD_CC, LD_BEN, LD_REG,
                 input logic GatePC, GateMDR, GateALU, GateMARMUX,
-                input logic SR2MUX, ADDR1MUX, MARMUX, BEN, MIO_EN, DRMUX, SR1MUX,
+                input logic SR2MUX, ADDR1MUX, MIO_EN, DRMUX, SR1MUX,
                 input logic [1:0] PCMUX, ADDR2MUX, ALUK,
-                output logic [15:0] MAR, MDR, IR, PC, LED, MDR_In,
-                output logic [15:0] Bus 
+                input logic [15:0] MDR_In,
+                output logic [15:0] MAR, MDR, IR, LED,
+                output logic [15:0] Bus,PC,
+                output logic BEN 
                 );
                 
-    logic [15:0] PC_val;
+    //logic [15:0] PC;
     logic [15:0] MDR_temp;
     logic [15:0] SR2OUT, SR1OUT;
     //logic [4:0] cstate, nstate; //debug
@@ -52,7 +54,8 @@ module datapath(input logic Clk, Reset,
                      .SR1OUT(SR1OUT)); 
                      
      ALU_16 ALU(.SR2OUT(SR2OUT), 
-               .SR1OUT(SR1OUT), 
+               .SR1OUT(SR1OUT),
+               .SR2MUX(SR2MUX), 
                .ALUK(ALUK), 
                .IR(IR), 
                .ALU_OUT(alu_temp));
@@ -75,7 +78,7 @@ module datapath(input logic Clk, Reset,
                         .SR1OUT(SR1OUT), 
                         .ADDR2MUX(ADDR2MUX), 
                         .ADDR1MUX(ADDR1MUX), 
-                        .adder_out(MARMUX));
+                        .adder_out(adder_out));
     
     BusDriver BusControl(.GateMARMUX(GateMARMUX),  //if statement up in here but we might want to change it
                          .GatePC(GatePC), 
@@ -83,7 +86,7 @@ module datapath(input logic Clk, Reset,
                          .GateALU(GateALU), 
                          .FromALU(alu_temp), //change to ALU output value
                          .FromMDR(MDR), 
-                         .FromMARMUX(MARMUX), 
+                         .FromMARMUX(adder_out), 
                          .FromPC(PC), 
                          .BusContent(Bus));
                         
@@ -95,15 +98,7 @@ module datapath(input logic Clk, Reset,
                             .Reset(Reset), 
                             .mux_sel(PCMUX), 
                             .PCMUX_bus(Bus), 
-                            .PCMUX_adder(MARMUX), 
+                            .PCMUX_adder(adder_out), 
                             .PC(PC)); //tied the adder input to 0 for demo 1
                             
-//    always_ff @ (posedge Clk)
-//	begin
-//	   if (LD_LED)
-//	       LED <= IR[9:0];
-//	   else
-//		   LED <= 0;
-//	end
-    
 endmodule

@@ -9,9 +9,38 @@ module RegFile(input logic Clk, Reset,
     logic [7:0] ld_internal; //contents of load mux
     logic [15:0] Regs_internal[8]; //each gpr's contents
     
-    mux_any #(3)DRMUX(.select(DR), .d0(IR[11:9]), .d1(3'b111), .mux_out(drmux_out));
-    mux_any #(3) SR1MUX(.select(SR1), .d0(IR[8:6]), .d1(IR[11:9]), .mux_out(sr1mux_out));
-    
+    mux_any #(3)DRMUX(.select(DR), 
+                      .d0(IR[11:9]), 
+                      .d1(3'b111), 
+                      .mux_out(drmux_out));
+                      
+    mux_any #(3) SR1MUX(.select(SR1), 
+                        .d0(IR[8:6]), 
+                        .d1(IR[11:9]), 
+                        .mux_out(sr1mux_out));
+                        
+    mux_reg SR1_regmux(.select(sr1mux_out), 
+                       .mux_out(SR1OUT), 
+                       .d0(Regs_internal[0]), 
+                       .d1(Regs_internal[1]), 
+                       .d2(Regs_internal[2]), 
+                       .d3(Regs_internal[3]), 
+                       .d4(Regs_internal[4]), 
+                       .d5(Regs_internal[5]), 
+                       .d6(Regs_internal[6]), 
+                       .d7(Regs_internal[7]));
+                       
+    mux_reg SR2_regmux(.select(SR2), 
+                        .mux_out(SR2OUT),
+                        .d0(Regs_internal[0]),   
+                        .d1(Regs_internal[1]),   
+                        .d2(Regs_internal[2]),   
+                        .d3(Regs_internal[3]),   
+                        .d4(Regs_internal[4]),   
+                        .d5(Regs_internal[5]),   
+                        .d6(Regs_internal[6]),   
+                        .d7(Regs_internal[7]));  
+     
     always_comb
     begin
 	   if(LD_REG)
@@ -29,27 +58,27 @@ module RegFile(input logic Clk, Reset,
 		else
 			ld_internal = 8'b0;
 	    //sr1out, might need to convert to module with 8-bit input/output and 3-bit select
-	    unique case(sr1mux_out)
-            3'b000: SR1OUT = Regs_internal[0];
-            3'b001: SR1OUT = Regs_internal[1];
-            3'b010: SR1OUT = Regs_internal[2];
-            3'b011: SR1OUT = Regs_internal[3];
-            3'b100: SR1OUT = Regs_internal[4];
-            3'b101: SR1OUT = Regs_internal[5];
-            3'b110: SR1OUT = Regs_internal[6];
-            3'b111: SR1OUT = Regs_internal[7];
-	    endcase
-	    //sr2out also might need to become module
-	    unique case(SR2)
-	        3'b000: SR2OUT = Regs_internal[0];
-            3'b001: SR2OUT = Regs_internal[1];
-            3'b010: SR2OUT = Regs_internal[2];
-            3'b011: SR2OUT = Regs_internal[3];
-            3'b100: SR2OUT = Regs_internal[4];
-            3'b101: SR2OUT = Regs_internal[5];
-            3'b110: SR2OUT = Regs_internal[6];
-            3'b111: SR2OUT = Regs_internal[7];
-	    endcase
+//	    unique case(sr1mux_out)
+//            3'b000: SR1OUT = Regs_internal[0];
+//            3'b001: SR1OUT = Regs_internal[1];
+//            3'b010: SR1OUT = Regs_internal[2];
+//            3'b011: SR1OUT = Regs_internal[3];
+//            3'b100: SR1OUT = Regs_internal[4];
+//            3'b101: SR1OUT = Regs_internal[5];
+//            3'b110: SR1OUT = Regs_internal[6];
+//            3'b111: SR1OUT = Regs_internal[7];
+//	    endcase
+//	    //sr2out also might need to become module
+//	    unique case(SR2)
+//	        3'b000: SR2OUT = Regs_internal[0];
+//            3'b001: SR2OUT = Regs_internal[1];
+//            3'b010: SR2OUT = Regs_internal[2];
+//            3'b011: SR2OUT = Regs_internal[3];
+//            3'b100: SR2OUT = Regs_internal[4];
+//            3'b101: SR2OUT = Regs_internal[5];
+//            3'b110: SR2OUT = Regs_internal[6];
+//            3'b111: SR2OUT = Regs_internal[7];
+//	    endcase
 	    
 		end
 		
@@ -64,4 +93,25 @@ module RegFile(input logic Clk, Reset,
         end
     endgenerate
     
+endmodule
+
+module mux_reg(input logic [2:0] select,
+               input logic [15:0] d0, d1, d2, d3, d4, d5, d6, d7,
+               output logic [15:0] mux_out);
+
+    //logic mux_out_internal;
+    
+    always_comb
+    begin
+        unique case(select)
+            3'b000: mux_out = d0;
+            3'b001: mux_out = d1;
+            3'b010: mux_out = d2;
+            3'b011: mux_out = d3;
+            3'b100: mux_out = d4;
+            3'b101: mux_out = d5;
+            3'b110: mux_out = d6;
+            3'b111: mux_out = d7;
+        endcase
+    end
 endmodule

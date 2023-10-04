@@ -24,7 +24,7 @@ module Reg_1 //#(parameter width = 1)
     begin
         if(Reset)
             Q <= 0;
-        else
+        else if (Load)
             Q <= D;
     end
 endmodule
@@ -37,7 +37,7 @@ module Reg_any #(parameter width = 3)
     begin
         if(Reset)
             Q <= 0;
-        else
+        else if (Load)
             Q <= D;
     end
 endmodule

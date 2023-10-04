@@ -22,8 +22,8 @@ module PCBlock(input logic Clk, Load, Reset,
         //potentially switch around
         unique case(mux_sel)
             2'b00: PC_internal = PC + 1'b1;
-            2'b01: PC_internal = PCMUX_adder;
-            2'b10: PC_internal = PCMUX_bus;
+            2'b01: PC_internal = PCMUX_bus;
+            2'b10: PC_internal = PCMUX_adder;
             2'b11: PC_internal = 16'bx;
         endcase
              

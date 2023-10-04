@@ -56,6 +56,16 @@ module slc3(
     assign ADDR = MAR; 
     assign MIO_EN = OE;
     
+    /*
+    input logic Clk, Reset,                                                 
+    input logic LD_MAR, LD_MDR, LD_IR, LD_PC, LD_LED, LD_CC, LD_BEN, LD_REG,
+    input logic GatePC, GateMDR, GateALU, GateMARMUX,                       
+    input logic SR2MUX, ADDR1MUX, MARMUX, MIO_EN, DRMUX, SR1MUX,            
+    input logic [1:0] PCMUX, ADDR2MUX, ALUK,                                
+    output logic [15:0] MAR, MDR, IR, LED, MDR_In,                          
+    output logic [15:0] Bus,                                                
+    output logic BEN                                                        
+    */
     datapath dp(.*);                                                
     
     //datapath dp(.*);    
@@ -73,12 +83,28 @@ module slc3(
     HexDriver HexB (
         .clk(Clk),
         .reset(Reset),
-        .in({IR[15:12], IR[11:8], IR[7:4], IR[3:0]}),
+        .in({PC[15:12], PC[11:8], PC[7:4], PC[3:0]}),
         .hex_seg(hex_segB),
         .hex_grid(hex_gridB)
     );
+                    
+    //9/26 add IR/MDR/MAR registers and a mux to load MDR                         
+    // Our I/O controller (note, this plugs into MDR/MAR)
+    Mem2IO memory_subsystem(
+        .*, .Reset(Reset), .ADDR(ADDR), .Switches(SW),
+        .HEX0(hex_4[0][3:0]), .HEX1(hex_4[1][3:0]), .HEX2(hex_4[2][3:0]), .HEX3(hex_4[3][3:0]), 
+        .Data_from_CPU(MDR), .Data_to_CPU(MDR_In),
+        .Data_from_SRAM(Data_from_SRAM), .Data_to_SRAM(Data_to_SRAM)
+    );
     
-    // Instantiate the rest of your modules here according to the block diagram of the SLC-3
+    // State machine, you need to fill in the code here as well
+    ISDU state_controller(
+        .*, .Reset(Reset), .Run(Run), .Continue(Continue),
+        .Opcode(IR[15:12]), .IR_5(IR[5]), .IR_11(IR[11]),
+       .Mem_OE(OE), .Mem_WE(WE)
+       //,.curr(state_c), .next(state_n) //debug
+    );
+	    // Instantiate the rest of your modules here according to the block diagram of the SLC-3
     // including your register file, ALU, etc..
     /*
     Reg_16 MAR_REG(.Clk(Clk), 
@@ -125,22 +151,5 @@ module slc3(
                             .PCMUX_adder(0), 
                             .PC(PC_val)); //tied the adder input to 0 for demo 1
     */
-                        
-    //9/26 add IR/MDR/MAR registers and a mux to load MDR                         
-    // Our I/O controller (note, this plugs into MDR/MAR)
-    Mem2IO memory_subsystem(
-        .*, .Reset(Reset), .ADDR(ADDR), .Switches(SW),
-        .HEX0(hex_4[0][3:0]), .HEX1(hex_4[1][3:0]), .HEX2(hex_4[2][3:0]), .HEX3(hex_4[3][3:0]), 
-        .Data_from_CPU(MDR), .Data_to_CPU(MDR_In),
-        .Data_from_SRAM(Data_from_SRAM), .Data_to_SRAM(Data_to_SRAM)
-    );
-    
-    // State machine, you need to fill in the code here as well
-    ISDU state_controller(
-        .*, .Reset(Reset), .Run(Run), .Continue(Continue),
-        .Opcode(IR[15:12]), .IR_5(IR[5]), .IR_11(IR[11]),
-       .Mem_OE(OE), .Mem_WE(WE)
-       //,.curr(state_c), .next(state_n) //debug
-    );
-	
+        
 endmodule
