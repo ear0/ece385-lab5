@@ -57,29 +57,6 @@ module RegFile(input logic Clk, Reset,
 		   endcase
 		else
 			ld_internal = 8'b0;
-	    //sr1out, might need to convert to module with 8-bit input/output and 3-bit select
-//	    unique case(sr1mux_out)
-//            3'b000: SR1OUT = Regs_internal[0];
-//            3'b001: SR1OUT = Regs_internal[1];
-//            3'b010: SR1OUT = Regs_internal[2];
-//            3'b011: SR1OUT = Regs_internal[3];
-//            3'b100: SR1OUT = Regs_internal[4];
-//            3'b101: SR1OUT = Regs_internal[5];
-//            3'b110: SR1OUT = Regs_internal[6];
-//            3'b111: SR1OUT = Regs_internal[7];
-//	    endcase
-//	    //sr2out also might need to become module
-//	    unique case(SR2)
-//	        3'b000: SR2OUT = Regs_internal[0];
-//            3'b001: SR2OUT = Regs_internal[1];
-//            3'b010: SR2OUT = Regs_internal[2];
-//            3'b011: SR2OUT = Regs_internal[3];
-//            3'b100: SR2OUT = Regs_internal[4];
-//            3'b101: SR2OUT = Regs_internal[5];
-//            3'b110: SR2OUT = Regs_internal[6];
-//            3'b111: SR2OUT = Regs_internal[7];
-//	    endcase
-	    
 		end
 		
 	genvar i;

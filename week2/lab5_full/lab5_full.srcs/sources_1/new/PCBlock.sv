@@ -10,15 +10,6 @@ module PCBlock(input logic Clk, Load, Reset,
     always_comb
     begin
     
-//        if(mux_sel == 2'b00)
-//            PC_internal = PC + 1'b1;
-//        else if(mux_sel == 2'b01)
-//            PC_internal = PCMUX_adder;
-//        else if(mux_sel == 2'b10)
-//            PC_internal = PCMUX_bus;
-//        else if(mux_sel == 2'b11)
-//            PC_internal = 16'hxxxx;
-
         //potentially switch around
         unique case(mux_sel)
             2'b00: PC_internal = PC + 1'b1;

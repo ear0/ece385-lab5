@@ -41,10 +41,10 @@ module slc3(
     logic [15:0] MDR_In;
     logic [15:0] MAR, MDR, IR;
     logic [3:0] hex_4[3:0]; 
-    
+    assign LED = IR;
     //I added this
     logic [15:0] PC, Bus;
-    logic [15:0] MDR_temp;
+    //logic [15:0] MDR_temp;
     //logic [4:0] cstate, nstate; //debug
     //temp ALU value of 0
     //logic alu_temp = 1'b0;
@@ -53,19 +53,10 @@ module slc3(
     //	MEM2IO will determine what gets put onto Data_CPU (which serves as a potential
     //	input into MDR)
     
-    assign ADDR = MAR; 
-    assign MIO_EN = OE;
+//    assign ADDR = MAR; 
+//    assign MIO_EN = OE;
     
-    /*
-    input logic Clk, Reset,                                                 
-    input logic LD_MAR, LD_MDR, LD_IR, LD_PC, LD_LED, LD_CC, LD_BEN, LD_REG,
-    input logic GatePC, GateMDR, GateALU, GateMARMUX,                       
-    input logic SR2MUX, ADDR1MUX, MARMUX, MIO_EN, DRMUX, SR1MUX,            
-    input logic [1:0] PCMUX, ADDR2MUX, ALUK,                                
-    output logic [15:0] MAR, MDR, IR, LED, MDR_In,                          
-    output logic [15:0] Bus,                                                
-    output logic BEN                                                        
-    */
+
     datapath dp(.*);                                                
     
     //datapath dp(.*);    
@@ -87,7 +78,8 @@ module slc3(
         .hex_seg(hex_segB),
         .hex_grid(hex_gridB)
     );
-                    
+    assign ADDR = MAR; 
+    assign MIO_EN = OE;                
     //9/26 add IR/MDR/MAR registers and a mux to load MDR                         
     // Our I/O controller (note, this plugs into MDR/MAR)
     Mem2IO memory_subsystem(
@@ -106,50 +98,6 @@ module slc3(
     );
 	    // Instantiate the rest of your modules here according to the block diagram of the SLC-3
     // including your register file, ALU, etc..
-    /*
-    Reg_16 MAR_REG(.Clk(Clk), 
-                    .Load(LD_MAR), 
-                    .Reset(Reset), 
-                    .D(Bus), 
-                    .Data_Out(MAR));
-    //needs to be muxed either internally or externally.
-    Reg_16 MDR_REG(.Clk(Clk), 
-                    .Load(LD_MDR), 
-                    .Reset(Reset), 
-                    .D(MDR_temp),
-                    .Data_Out(MDR)); 
-    Reg_16 IR_REG(.Clk(Clk), 
-                    .Load(LD_IR), 
-                    .Reset(Reset), 
-                    .D(Bus), 
-                    .Data_Out(IR));
     
-    //mdr_temp is value between mux and mdr register 
-    Mux2to1Block mux_mdr(.d0(Bus),        //MIO_EN =0, load from bus
-                        .d1(MDR_In),      //MIO_EN=1, load from data_to_cpu
-                        .select(MIO_EN),  ///MIO_EN
-                        .mux_data(MDR_temp));
-    
-    BusDriver BusControl(.GateMARMUX(GateMARMUX),  //if statement up in here but we might want to change it
-                         .GatePC(GatePC), 
-                         .GateMDR(GateMDR), 
-                         .GateALU(GateALU), 
-                         .FromALU(alu_temp), 
-                         .FromMDR(MDR), 
-                         .FromMARMUX(MAR), 
-                         .FromPC(PC_val), 
-                         .BusContent(Bus));
-                        
-    //note: .FromPC(PC_val) comes from ProgramCounter, Bus is common
-    //PCMUX [1:0] is select vector?
-     
-    PCBlock ProgramCounter(.Clk(Clk), 
-                            .Load(LD_PC), 
-                            .Reset(Reset), 
-                            .mux_sel(PCMUX), 
-                            .PCMUX_bus(Bus), 
-                            .PCMUX_adder(0), 
-                            .PC(PC_val)); //tied the adder input to 0 for demo 1
-    */
         
 endmodule

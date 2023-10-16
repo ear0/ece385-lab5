@@ -84,12 +84,11 @@ initial begin: TEST_VECTORS
 //        #5 Continue = 1;
 //        #5 Continue = 0;
 #0
-	Reset = 1;
-	#3 Reset = 0;
+	
 	Run_ctrl = 1'b1;
 	Continue_ctrl = 1'b1;
 	#3
-	SW = 16'h0006;
+	SW = 10'b0000000011;
 	Run_ctrl = 1'b0;
 	Continue_ctrl = 1'b0;
 
@@ -144,5 +143,6 @@ initial begin: TEST_VECTORS
 	Continue_ctrl = 1'b1;
 	#3
 	Continue_ctrl = 1'b0;
+
 end
 endmodule
